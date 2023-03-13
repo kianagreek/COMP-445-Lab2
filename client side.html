@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Name -->
+    <title>COMP 445 Lab 2 - Streaming App</title> 
+
+    <!-- Link to main style sheet-->
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+    <!-- <div class = "camera">
+        <video id="video_camera" width="320" height="240" autoplay playsinline></video>
+        <button id="camera--trigger">Take a picture</button>
+    </div> -->
+
+<script>
+    //using Media Stream API 
+    //requesting permission to use camera and mic; loalMediaStream is webcam
+function startup() {
+    video = document.getElementById('video_camera');
+    startbutton = document.getElementById('startbutton');
+    navigator.mediaDevices.getUserMedia({video: { minWidth: 1280, minHeight: 720}, audio: true})
+        .then(function(stream) {
+            track = stream.getTracks()[0];
+            video_camera.srcObject = stream;
+        })
+        .catch(function(error) {
+            console.error("Error: could not access web cam or mic",error);
+        });    
+}
+
+window.addEventListener("load", startup, false);
+</script> 
+
+<div class = "camera">
+    <video id="video_camera" autoplay playsinline></video>
+    <button id="camera--trigger">Take a picture</button>
+</div>
+
+
+</body>
+
+</html>
