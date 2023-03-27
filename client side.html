@@ -22,6 +22,14 @@
 function startup() {
     video = document.getElementById('video_camera');
     startbutton = document.getElementById('startbutton');
+
+    const serverURL = 'team5@labs445-2.encs.concordia.ca';
+    
+    //defining variables to store the recorded video and its data
+    let recorder;
+    let recordedChunks = [];
+
+
     navigator.mediaDevices.getUserMedia({video: { minWidth: 1280, minHeight: 720}, audio: false}) //false for dev, set back to true for assignment
         .then(function(stream) {
             track = stream.getTracks()[0];
@@ -33,6 +41,28 @@ function startup() {
 }
 
 window.addEventListener("load", startup, false);
+
+//when the recorder is stopped, the recorded video is uploaded to the server
+recorder.addEventListener('stop', function() {
+    //creating a Blob from the recorded chunks
+    const recordedBlob = new Blob(recordedChunks, { type: 'video/mp4' });
+    
+    //creating a FormData object to send the recorded video to the server
+    const formData = new FormData();
+    formData.append('video', recordedBlob, 'myvideo.mp4');
+    
+    //sending the FormData to the server using a fetch request
+    fetch(serverURL, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        //updating the UI to show that the video has been uploaded
+        startbutton.disabled = false;
+        startbutton.textContent = 'Start Recording';
+    })
+    .catch(error => console.error(error));
+});
 </script> 
 
 <div id = "title" class = "center">
