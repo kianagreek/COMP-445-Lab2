@@ -15,7 +15,6 @@ let recordedChunks = [];
 function startup() {
     navigator.mediaDevices.getUserMedia({video: { minWidth: 1280, minHeight: 720}, audio: false}) //false for dev, set back to true for assignment
         .then(function(stream) {
-            let track = stream.getTracks()[0];
             video_camera.srcObject = stream;
         })
         .catch(function(error) {
@@ -40,7 +39,7 @@ const encoder = new VideoEncoder({
 
 //parameters for encoder output
 encoder.configure({
-    codec: "avc1",
+    codec: "h264",
     width: 1280,
     height: 720,
     bitrate: 5_000_000,
@@ -55,13 +54,38 @@ window.addEventListener("load", startup, false);
 
 //capturing video and encoding frames when user clicks start button 
 startbutton.addEventListener('click', async function() {
-    const trackProcessor = new MediaStreamTrackProcessor(track);
-    const reader = trackProcessor.readable.getReader();
-    while (true) {
-        const result = await reader.read();
-        if (result.done) break;
-        const frameFromCamera = result.value;
-    }
+    //const trackProcessor = new MediaStreamTrackProcessor(track); - might remove
+
+    //processor for stream video tracks
+    const trackProcessor = new MediaStreamTrackProcessor(stream.getVideoTracks()[0]);
+
+    //const reader = trackProcessor.readable.getReader();
+
+    //start encoding
+        // Start the encoding process
+        const start = async () => {
+            while (true) {
+              // Wait for the next frame to be available
+              const result = await trackProcessor.read();
+              if (result.done) {
+                break;
+              }
+              // Encode the frame using the VideoEncoder
+              const encodedFrame = await encoder.encode(value, { keyFrame: true });
+
+              //do stuff with encoded frame 
+            }
+          };
+    start();
+});
+
+stopbutton.addEventListener("click", function() {
+    if (encoder) {
+        encoder.close();
+      }
+      if (processor) {
+        processor.stop();
+      }
 });
 
 //when the recorder is stopped, the recorded video is uploaded to the server
@@ -85,3 +109,56 @@ recorder.addEventListener('stop', function() {
     })
     .catch(error => console.error(error));
 });
+
+
+//chatgpt
+
+// Get permission to access the camera
+navigator.mediaDevices.getUserMedia({ video: true })
+  .then((stream) => {
+    // Set the source of the video element to the camera stream
+    video.srcObject = stream;
+
+    // Create a new MediaStreamTrackProcessor with the video track
+    const processor = new MediaStreamTrackProcessor(stream.getVideoTracks()[0]);
+
+    // Create a new VideoEncoder with the desired configuration
+    const encoder = new VideoEncoder({
+      output: (chunk) => {
+        // Send the encoded chunk to the server or save it to disk
+        console.log(`Encoded chunk size: ${chunk.byteLength}`);
+      },
+      error: (e) => {
+        console.error(`VideoEncoder error: ${e.message}`);
+      },
+      codec: 'h264',
+      width: 1280,
+      height: 720,
+      bitrate: 5000000,
+      framerate: 30,
+    });
+
+    // Start the encoding process
+    const start = async () => {
+      while (true) {
+        // Wait for the next frame to be available
+        const { value, done } = await processor.read();
+
+        if (done) {
+          console.log('No more frames to encode');
+          break;
+        }
+
+        // Encode the frame using the VideoEncoder
+        const encodedFrame = await encoder.encode(value, { keyFrame: true });
+
+        // Send the encoded frame to the server or save it to disk
+        console.log(`Encoded frame size: ${encodedFrame.byteLength}`);
+      }
+    };
+
+    start();
+  })
+  .catch((e) => {
+    console.error(`getUserMedia error: ${e.message}`);
+  });
