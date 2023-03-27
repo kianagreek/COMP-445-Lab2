@@ -16,6 +16,8 @@ function startup() {
     navigator.mediaDevices.getUserMedia({video: { minWidth: 1280, minHeight: 720}, audio: false}) //false for dev, set back to true for assignment
         .then(function(stream) {
             video_camera.srcObject = stream;
+            processor = new MediaStreamTrackProcessor(stream.getVideoTracks()[0]);
+
         })
         .catch(function(error) {
             console.error("Error: could not access web cam or mic",error);
@@ -109,56 +111,3 @@ recorder.addEventListener('stop', function() {
     })
     .catch(error => console.error(error));
 });
-
-
-//chatgpt
-
-// Get permission to access the camera
-navigator.mediaDevices.getUserMedia({ video: true })
-  .then((stream) => {
-    // Set the source of the video element to the camera stream
-    video.srcObject = stream;
-
-    // Create a new MediaStreamTrackProcessor with the video track
-    const processor = new MediaStreamTrackProcessor(stream.getVideoTracks()[0]);
-
-    // Create a new VideoEncoder with the desired configuration
-    const encoder = new VideoEncoder({
-      output: (chunk) => {
-        // Send the encoded chunk to the server or save it to disk
-        console.log(`Encoded chunk size: ${chunk.byteLength}`);
-      },
-      error: (e) => {
-        console.error(`VideoEncoder error: ${e.message}`);
-      },
-      codec: 'h264',
-      width: 1280,
-      height: 720,
-      bitrate: 5000000,
-      framerate: 30,
-    });
-
-    // Start the encoding process
-    const start = async () => {
-      while (true) {
-        // Wait for the next frame to be available
-        const { value, done } = await processor.read();
-
-        if (done) {
-          console.log('No more frames to encode');
-          break;
-        }
-
-        // Encode the frame using the VideoEncoder
-        const encodedFrame = await encoder.encode(value, { keyFrame: true });
-
-        // Send the encoded frame to the server or save it to disk
-        console.log(`Encoded frame size: ${encodedFrame.byteLength}`);
-      }
-    };
-
-    start();
-  })
-  .catch((e) => {
-    console.error(`getUserMedia error: ${e.message}`);
-  });
