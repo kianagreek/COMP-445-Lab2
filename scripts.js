@@ -23,7 +23,10 @@ function startup() {
         });    
     }
 
-window.addEventListener("load", startup, false);
+//function for dealing with chunks of encoded data
+function handleChunk(chunk, metadata) {
+    //code
+}
 
 //set up encoder
 const encoder = new VideoEncoder({
@@ -46,7 +49,11 @@ encoder.configure({
 
 
 //EVENT LISTENERS 
-//capturing video and encoding frames
+
+//requests access to webcam and mic when webpage loads
+window.addEventListener("load", startup, false);
+
+//capturing video and encoding frames when user clicks start button 
 startbutton.addEventListener('click', async function() {
     const trackProcessor = new MediaStreamTrackProcessor(track);
     const reader = trackProcessor.readable.getReader();
@@ -56,12 +63,6 @@ startbutton.addEventListener('click', async function() {
         const frameFromCamera = result.value;
     }
 });
-
-//function for dealing with chunks of encoded data
-function handleChunk(chunk, metadata) {
-
-}
-
 
 //when the recorder is stopped, the recorded video is uploaded to the server
 recorder.addEventListener('stop', function() {
