@@ -1,42 +1,43 @@
-
 * {
+  margin: 0;
+  padding: 0;
   font-family: Arial, Helvetica, sans-serif;
 }
 
-.center {
+/* flex container */
+#main__main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  height: 100vh;
+}
+
+#main__video {
+  max-width: 300px;
+}
+
+#main__video-button {
+  background-color: gainsboro;
+  height: 50px;
+  width: 50px;
+  /* makes the button a circle */
+  border-radius: 50%;
+  /*  */
   text-align: center;
+  /* vertically allign the text because same as button height */
+  line-height: 50px;
+  /* decrease font size by 25% */
+  font-size: 0.75em;
+  /* fading box shadow */
+  transition-property: box-shadow;
+  transition-duration: 0.3s;
 }
 
-#webcam {
-  width: 800px;
-  height: 450px;
-  display: block;
-  margin: auto;
-  border: 2px gray;
-  border-radius: 25px;
-}
-
-/*#video_camera {
-  width: 800px;
-  height: 450px;
-  display: block;
-  margin: auto;
-  outline-style: 2px double gray;
-} */
-
-.button {
-  background-color: white;
-  color: black;
-  border: 2px solid #e7e7e7;
-  padding: 10px 24px;
-  margin: 5px 5px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  transition-duration: 0.4s;
-}
-
-.button:hover {
-  background-color: #e7e7e7;
+/* cursoe because pointer when hovering over the button */
+#main__video-button:hover {
+  cursor: pointer;
+  box-shadow: gray 0 0 5px 5px;
+  transition-property: box-shadow;
+  transition-duration: 0.3s;
 }

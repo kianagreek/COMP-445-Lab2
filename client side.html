@@ -16,36 +16,24 @@
 
 <body>
 
-<script>
-    //using Media Stream API 
-    //requesting permission to use camera and mic; loalMediaStream is webcam
-function startup() {
-    video = document.getElementById('video_camera');
-    startbutton = document.getElementById('startbutton');
-    navigator.mediaDevices.getUserMedia({video: { minWidth: 1280, minHeight: 720}, audio: false}) //false for dev, set back to true for assignment
-        .then(function(stream) {
-            track = stream.getTracks()[0];
-            video_camera.srcObject = stream;
-        })
-        .catch(function(error) {
-            console.error("Error: could not access web cam or mic",error);
-        });    
-}
+    <div id = "title" class = "center">
+        <h2>Comp 445 Lab2</h1>
+        <h4>By: Kiana Greek - 40135171, Ryan Haniff - 27069421</h3>
+    </div>
 
-window.addEventListener("load", startup, false);
-</script> 
 
-<div id = "title" class = "center">
-    <h2>Comp 445 Lab2</h1>
-    <h4>By: Kiana Greek - 40135171, Ryan Haniff - 27069421</h3>
-</div>
+    <div id="main__main-container">
+        <video id="main__video" autoplay playsinline>Can't load video</video>
+        <div id="main__video-button">Record</div>
+    </div>
+    <script src="./script.js"></script>
 
-<div id = "webcam" class = "center">
-    <video id="video_camera" autoplay playsinline></video>
-    <button class = "button" id="start_recording">Start Recording</button>
-    <button class = "button" id="stop_recording">Stop Recording</button>
-</div>
 
+    <!-- <div id = "webcam" class = "center">
+        <video id="video_camera" autoplay playsinline></video>
+        <button class = "button" id="start_recording">Start Recording</button>
+        <button class = "button" id="stop_recording">Stop Recording</button>
+    </div> -->
 
 </body>
 
