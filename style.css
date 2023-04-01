@@ -1,4 +1,5 @@
 
+/* css reset to load before page loads */
 * {
   font-family: Arial, Helvetica, sans-serif;
 }
@@ -16,15 +17,15 @@
   border-radius: 25px;
 }
 
-/*#video_camera {
-  width: 800px;
-  height: 450px;
+#video_camera {
+  max-width: 300px;
+  /* height: 450px;
   display: block;
   margin: auto;
-  outline-style: 2px double gray;
-} */
+  outline-style: 2px double gray; */
+}
 
-.button {
+#start_recording {
   background-color: white;
   color: black;
   border: 2px solid #e7e7e7;
@@ -37,6 +38,9 @@
   transition-duration: 0.4s;
 }
 
-.button:hover {
+#start_recording:hover {
+  cursor:pointer;
   background-color: #e7e7e7;
+  box-shadow: gray 0 0 5px 5px;
+  transition-duration: .3s;
 }
