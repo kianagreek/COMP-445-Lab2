@@ -1,8 +1,8 @@
 //VARIABLE DECLARATIONS 
 const serverURL = 'team5@labs445-2.encs.concordia.ca';
 let video = document.getElementById('video_camera'); 
-let startbutton = document.getElementById('start_button');
-let stopbutton = document.getElementById('stop_button');
+let startbutton = document.getElementById('start_recording');
+let stopbutton = document.getElementById('stop_recording');
 
 //defining variables to store the recorded video and its data
 let recorder;
@@ -40,13 +40,13 @@ const encoder = new VideoEncoder({
 ,});
 
 //parameters for encoder output
-encoder.configure({
-    codec: "h264",
-    width: 1280,
-    height: 720,
-    bitrate: 5_000_000,
-    framerate: 30,
-});
+// encoder.configure({
+//     codec: "h264",
+//     width: 1280,
+//     height: 720,
+//     bitrate: 5_000_000,
+//     framerate: 30,
+// });
 
 
 //EVENT LISTENERS 
