@@ -4,7 +4,7 @@ const serverURL = 'team5@labs445-2.encs.concordia.ca';
 let video = document.getElementById('video_camera'); 
 // buttons
 let startbutton = document.getElementById('start_recording');
-// let stopbutton = document.getElementById('stop_button');
+let stopbutton = document.getElementById('stop_button');
 
 // media recorder
 let mediaRecorder;
