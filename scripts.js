@@ -7,6 +7,7 @@ let stopbutton = document.getElementById("stop_recording");
 //defining variables to store the recorded video and its data
 let mediaRecorder;
 let chunks = [];
+let timeslice = 3000; // number of miliseconds to record each blob
 
 //FUNCTIONS
 
@@ -15,20 +16,6 @@ navigator.mediaDevices
   .then(function (stream) {
     video.srcObject = stream;
     mediaRecorder = new MediaRecorder(stream);
-
-    mediaRecorder.ondataavailable = function (e) {
-      chunks.push(e.data);
-    };
-
-    mediaRecorder.onstop = function () {
-      const blob = new Blob(chunks, { type: "video/mp4" });
-      const formData = new FormData();
-      formData.append("video", blob);
-      fetch("upload.php", {
-        method: "POST",
-        body: formData,
-      });
-    };
   })
   .catch(function (err) {
     console.log("Error: " + err);
@@ -36,16 +23,62 @@ navigator.mediaDevices
 
 startbutton.onclick = function () {
   chunks = [];
-  mediaRecorder.start();
+  let count = 1;
   startbutton.disabled = true;
   stopbutton.disabled = false;
-};
+  mediaRecorder.start(timeslice); // begins recording media into one or more Blob objects
+  mediaRecorder.ondataavailable = function (e) {
+    // chunks.push(e.data);
+    // maybe we can uplaod one blob at a time
+    const blob = new Blob([e.data], { type: "video/mp4" });
+    const formData = new FormData();
+    formData.append("video" + count.toString(), blob);
+    let server = "http://labs445-2.encs.concordia.ca/~team5/public_html/upload.php";
+    // let server = "upload.php";
+    fetch(server, {
+      method: "POST",
+      body: formData,
+    });
+    count++;
+  };
+}; 
 
 stopbutton.onclick = function () {
-  mediaRecorder.stop();
   startbutton.disabled = false;
   stopbutton.disabled = true;
+
+  // when we stop the recording we upload the blobs
+  mediaRecorder.onstop = function () {
+    // let blob = new Blob(chunks, { type: "video/mp4" });
+    // let url = URL.createObjectURL(blob);
+    // let a = document.createElement("a");
+    // document.body.appendChild(a);
+    // a.style = "display: none";
+    // a.href = url;
+    // a.download = "recorded.mp4"; // Set your desired file name here
+    // a.click();
+    // window.URL.revokeObjectURL(url);
+
+    // const blob = new Blob(chunks, { type: "video/mp4" });
+    // // using the Fetch API
+    // const formData = new FormData();
+    // formData.append("video", blob);
+    // let server = "http://labs445-2.encs.concordia.ca/~team5/public_html/upload.php";
+    // // let server = "upload.php";
+    // fetch(server, {
+    //   method: "POST",
+    //   body: formData,
+    // });
+
+  };
+
+  mediaRecorder.stop();
 };
+
+// Log in info
+// username: team5
+// password: password5
+// SSH: team5@labs445-2.encs.concordia.ca
 
 // ********************* uncoment here for old stuff *********************
 /*
