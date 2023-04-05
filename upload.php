@@ -16,8 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["video"])) {
 ?>
 
 
-
-<!-- <?php -->
+/*  <?php
 // $servername = 'ruc353.encs.concordia.ca:3306';
 // $database = 'ruc353_1';
 // $username = 'ruc353_1';
@@ -33,4 +32,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES["video"])) {
 // } catch (PDOException $e) {
     // die('Connection Failed: ' . $e->getMessage());
 // }
-// ?> 
+// ?> */
