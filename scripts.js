@@ -32,8 +32,10 @@ startbutton.onclick = function () {
     // maybe we can uplaod one blob at a time
     const blob = new Blob([e.data], { type: "video/mp4" });
     const formData = new FormData();
-    formData.append("video" + count.toString(), blob);
-    let server = "http://labs445-2.encs.concordia.ca/~team5/public_html/upload.php";
+    let fileName = "video" + count.toString();
+    console.log(fileName);
+    formData.append(fileName, blob);
+    let server = "http://labs445-2.encs.concordia.ca/~team5/";
     // let server = "upload.php";
     fetch(server, {
       method: "POST",
