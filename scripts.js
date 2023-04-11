@@ -4,14 +4,14 @@ let video = document.getElementById("video_camera");
 let startbutton = document.getElementById("start_recording");
 let stopbutton = document.getElementById("stop_recording");
 
-//defining variables to store the recorded video and its data7
+//defining variables to store the recorded video and its data
 let mediaRecorder;
-let chunks = [];
-let timeslice = 3000; // number of miliseconds to record each blob
+// number of miliseconds to record each blob
+let timeslice = 3000; 
 
 //FUNCTIONS
-
 navigator.mediaDevices
+  // setting the video dimensions for he webcame
   .getUserMedia({ audio: true, video: { minWidth: 1280, minHeight: 720 } })
   .then(function (stream) {
     video.srcObject = stream;
@@ -21,39 +21,47 @@ navigator.mediaDevices
     console.log("Error: " + err);
   });
 
+  // when the start recording button is pressed
 startbutton.onclick = function () {
-  chunks = [];
-  let count = 1;
+  // initilize the counter for console logs
+  let count = 0;
+  // disable the recoding button and enable the stop recording button
   startbutton.disabled = true;
   stopbutton.disabled = false;
-  mediaRecorder.start(timeslice); // begins recording media into one or more Blob objects
+  // begins recording media into one or more Blob objects
+  mediaRecorder.start(timeslice); 
 
-  mediaRecorder.ondataavailable = function (e) {
-    // chunks.push(e.data);
+  mediaRecorder.ondataavailable = (video_segment) => {
+    chunks.push(video_segment.data);
+
     // maybe we can uplaod one blob at a time
-    const blob = new Blob([e.data], { type: "video/mp4" });
-    const formData = new FormData();
+    let blob = new Blob([video_segment.data], { type: "video/mp4" });
+    let formData = new FormData();
     formData.append("video", blob, "video.mp4");
 
-    // where the POST happens
+    // POST to APACHE server
     const xhr = new XMLHttpRequest();
+    // calling the .php file server side
     xhr.open("POST", "save_video.php", true);
     xhr.onload = function () {
       if (xhr.status === 200) {
+        // console log successfuly upload with counter
         console.log("Video saved successfully! " + count.toString());
       } else {
         console.log("Error saving video!");
       }
     };
+    // uploadiing the blob
     xhr.send(formData);
     count++;
-    delete blob;
   };
 };
 
 stopbutton.onclick = function () {
+  // disable the recoding button and enable the stop recording button
   startbutton.disabled = false;
   stopbutton.disabled = true;
+  // stop recording video
   mediaRecorder.stop();
 };
 
