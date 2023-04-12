@@ -32,9 +32,7 @@ startbutton.onclick = function () {
   mediaRecorder.start(timeslice); 
 
   mediaRecorder.ondataavailable = (video_segment) => {
-    chunks.push(video_segment.data);
-
-    // maybe we can uplaod one blob at a time
+    // uplaod one blob at a time
     let blob = new Blob([video_segment.data], { type: "video/mp4" });
     let formData = new FormData();
     formData.append("video", blob, "video.mp4");

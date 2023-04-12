@@ -5,7 +5,7 @@ $counter = intval(file_get_contents($counter_file));
 
 if (isset($_FILES['video'])) {
     // location where video segments are saved
-    $upload_dir = "uploaded_video_files/";
+    $upload_dir = "public_html/";
     // video segment name
     $file_name = "video_" . $counter . ".mp4";
   // Moves the uploaded file to the new location
