@@ -25,11 +25,20 @@ XMLHttpRequest function we set a POST request and call save_video.php which is
 server side.
 
 On the server side, there should be a save_video.php file. This is where the communication
-between the client and server occurs. The formData is sent across the network to the server,
-a integer variable is read to keep track of and stop the overlap of video segments. 
-The video file is then stored in the server directory called "public_html". The integer
-is then incremented and saved for the next video segment that gets sent.
+between the client and server occurs. The main issue we had Same Origin Policy (SOP) which 
+is enforced by broswers. It blocks web pages from making requests to a different domain than
+the one the page originated from, unless the server explicitly allows it through CORS headers. 
+To fix this, the php file needed the Access-Control-Allow-Origin headers. The formData is sent
+across the network to the server, a integer variable is read to keep track of and stop the 
+overlap of video segments. The video file is then stored in the server directory called
+"video_segments". The integer is then incremented and saved for the next video segment that gets sent.
 
 Once the user clicks the stop recording button, the onclick function is triggered. The last
 video segment is recorded and sent to the server. The start button is then enabled again 
 and the stop button is disabled. Finally, the mediaRecorder is stopped.
+
+Notes to run: 
+- Make sure you have a folder called "video_segments" otherwise the php file wont know where
+  to save the video segments.
+- Have a text file called "counter.txt" with a integer value inside. save_video.php uses that
+  integer value to save the video segments in order.

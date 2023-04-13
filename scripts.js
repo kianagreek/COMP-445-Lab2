@@ -1,5 +1,10 @@
+// Log in info
+// username: team5
+// password: password5
+// SSH: team5@labs445-2.encs.concordia.ca
+
 //VARIABLE DECLARATIONS
-const serverURL = "http://labs445-2.encs.concordia.ca/~team5/";
+const serverURL = "http://labs445-2.encs.concordia.ca/~team5/save_video.php";
 let video = document.getElementById("video_camera");
 let startbutton = document.getElementById("start_recording");
 let stopbutton = document.getElementById("stop_recording");
@@ -40,49 +45,23 @@ startbutton.onclick = function () {
     let formData = new FormData();
     formData.append("video", blob, "video.mp4");
 
-
-    // where the POST happens using fetch API
-    fetch(serverURL + "save_video.php", {
-      method: "POST",
-      body: formData,
-      port: 8094
-    })
-    .then(response => {
-      if (response.ok) {
+    // ---------using XMLHttpRequest -----------------
+    // When sending files to apache2 server, make sure the directories have the correct permissions to read and write files
+    // These had to be changed on the Concordia server to allow the video segments to save
+    // POST to APACHE2 server
+    const xhr = new XMLHttpRequest();
+    // calling the .php file server side
+    xhr.open("POST", serverURL, true);
+    xhr.onload = function () {
+      if (xhr.status === 200) {
+        // console log successfuly upload with counter
         console.log("Video saved successfully! " + count.toString());
       } else {
         console.log("Error saving video!");
       }
-      count++;
-      delete blob;
-    })
-    .catch(error => {
-      console.log(error);
-    });
-
-
-
-    // ---------using XMLHttpRequest -----------------
-
-    // // POST to APACHE server
-    // const xhr = new XMLHttpRequest();
-    // // calling the .php file server side
-    // xhr.open("POST", serverURL + "save_video.php:8094", true);
-    // xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
-    // xhr.onload = function () {
-    //   if (xhr.status === 200) {
-    //     // console log successfuly upload with counter
-    //     console.log("Video saved successfully! " + count.toString());
-    //   } else {
-    //     console.log("Error saving video!");
-    //   }
-    // };
-    // // uploadiing the blob
-    // xhr.send(formData);
-
-    // ---------using XMLHttpRequest -----------------
-
-
+    };
+    // uploadiing the blob
+    xhr.send(formData);
     count++;
   };
 };
@@ -94,9 +73,3 @@ stopbutton.onclick = function () {
   // stop recording video
   mediaRecorder.stop();
 };
-
-// Log in info
-// username: team5
-// password: password5
-// SSH: team5@labs445-2.encs.concordia.ca
-
