@@ -1,5 +1,5 @@
 //VARIABLE DECLARATIONS
-const serverURL = "team5@labs445-2.encs.concordia.ca";
+const serverURL = "http://labs445-2.encs.concordia.ca/~team5/";
 let video = document.getElementById("video_camera");
 let startbutton = document.getElementById("start_recording");
 let stopbutton = document.getElementById("stop_recording");
@@ -8,6 +8,9 @@ let stopbutton = document.getElementById("stop_recording");
 let mediaRecorder;
 // number of miliseconds to record each blob
 let timeslice = 3000; 
+
+const username = "team5";
+const password = "password5";
 
 //FUNCTIONS
 navigator.mediaDevices
@@ -37,20 +40,49 @@ startbutton.onclick = function () {
     let formData = new FormData();
     formData.append("video", blob, "video.mp4");
 
-    // POST to APACHE server
-    const xhr = new XMLHttpRequest();
-    // calling the .php file server side
-    xhr.open("POST", "save_video.php", true);
-    xhr.onload = function () {
-      if (xhr.status === 200) {
-        // console log successfuly upload with counter
+
+    // where the POST happens using fetch API
+    fetch(serverURL + "save_video.php", {
+      method: "POST",
+      body: formData,
+      port: 8094
+    })
+    .then(response => {
+      if (response.ok) {
         console.log("Video saved successfully! " + count.toString());
       } else {
         console.log("Error saving video!");
       }
-    };
-    // uploadiing the blob
-    xhr.send(formData);
+      count++;
+      delete blob;
+    })
+    .catch(error => {
+      console.log(error);
+    });
+
+
+
+    // ---------using XMLHttpRequest -----------------
+
+    // // POST to APACHE server
+    // const xhr = new XMLHttpRequest();
+    // // calling the .php file server side
+    // xhr.open("POST", serverURL + "save_video.php:8094", true);
+    // xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
+    // xhr.onload = function () {
+    //   if (xhr.status === 200) {
+    //     // console log successfuly upload with counter
+    //     console.log("Video saved successfully! " + count.toString());
+    //   } else {
+    //     console.log("Error saving video!");
+    //   }
+    // };
+    // // uploadiing the blob
+    // xhr.send(formData);
+
+    // ---------using XMLHttpRequest -----------------
+
+
     count++;
   };
 };
