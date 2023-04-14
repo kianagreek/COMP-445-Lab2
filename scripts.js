@@ -21,13 +21,16 @@ const password = "password5";
 navigator.mediaDevices
   // setting the video dimensions for he webcame
   .getUserMedia({
+    // allow audio recording
     audio: true,
     video: {
+      // width and height of video stream
       minWidth: 1280,
       minHeight: 720,
+      // framerate
       frameRate: { ideal: 30 },
       // avc1 is the same as h.264 (are used interchangeably)
-      mimeType: 'video/mp4; codecs="avc1.640028"',
+      mimeType: 'video/mp4; codecs="avc1.4d002a"',
       // 5 mpbs 
       bitrate: 5000000
     },
