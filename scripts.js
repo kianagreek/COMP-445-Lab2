@@ -12,7 +12,7 @@ let stopbutton = document.getElementById("stop_recording");
 //defining variables to store the recorded video and its data
 let mediaRecorder;
 // number of miliseconds to record each blob
-let timeslice = 3000; 
+let timeslice = 3000;
 
 const username = "team5";
 const password = "password5";
@@ -20,7 +20,18 @@ const password = "password5";
 //FUNCTIONS
 navigator.mediaDevices
   // setting the video dimensions for he webcame
-  .getUserMedia({ audio: true, video: { minWidth: 1280, minHeight: 720 } })
+  .getUserMedia({
+    audio: true,
+    video: {
+      minWidth: 1280,
+      minHeight: 720,
+      frameRate: { ideal: 30 },
+      // avc1 is the same as h.264 (are used interchangeably)
+      mimeType: 'video/mp4; codecs="avc1.640028"',
+      // 5 mpbs 
+      bitrate: 5000000
+    },
+  })
   .then(function (stream) {
     video.srcObject = stream;
     mediaRecorder = new MediaRecorder(stream);
@@ -29,7 +40,7 @@ navigator.mediaDevices
     console.log("Error: " + err);
   });
 
-  // when the start recording button is pressed
+// when the start recording button is pressed
 startbutton.onclick = function () {
   // initilize the counter for console logs
   let count = 0;
@@ -37,7 +48,7 @@ startbutton.onclick = function () {
   startbutton.disabled = true;
   stopbutton.disabled = false;
   // begins recording media into one or more Blob objects
-  mediaRecorder.start(timeslice); 
+  mediaRecorder.start(timeslice);
 
   mediaRecorder.ondataavailable = (video_segment) => {
     // uplaod one blob at a time
